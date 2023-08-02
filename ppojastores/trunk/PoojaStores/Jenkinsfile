@@ -1,0 +1,52 @@
+pipeline {
+    agent {
+        label 'docker' // This assumes you have a Jenkins agent with Docker capabilities labeled as 'docker'
+    }
+    environment {
+        // Define environment variables as needed
+        DOCKER_IMAGE = "poojastores:latest"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Restore Dependencies') {
+            steps {
+                // Restore .NET application dependencies (e.g., NuGet packages)
+                sh 'dotnet restore'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Build the .NET application
+                sh 'dotnet build'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                // Run tests (optional, adjust as needed)
+                sh 'dotnet test'
+            }
+        }
+        
+        stage('Publish') {
+            steps {
+                // Publish the .NET application for deployment
+                sh 'dotnet publish -o ./publish'
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                // Build the Docker image
+                script {
+                    docker.build("${DOCKER_IMAGE}", "-f Dockerfile ./publish")
+                }
+            }
+        }
+    }
