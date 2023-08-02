@@ -14,10 +14,10 @@ RUN dotnet restore
 COPY . ./
 
 # Build the application
-RUN dotnet build -c Release --no-restore
+RUN dotnet build -c Release 
 
 # Publish the application to a folder
-RUN dotnet publish -c Release -o out --no-restore
+RUN dotnet publish -c Release -o out 
 
 # Create a runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS runtime
