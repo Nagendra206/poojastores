@@ -5,6 +5,7 @@ pipeline {
     environment {
         // Define environment variables as needed
         DOCKER_IMAGE = "poojastores:latest"
+        CONTAINER_NAME = "pooja_stores"
     }
     stages {
         stage('Checkout') {
@@ -49,4 +50,24 @@ pipeline {
                 }
             }
         }
+        
+        stage('Run Docker Container') {
+            steps {
+                // Stop and remove the existing container if it's running
+                sh "docker stop ${CONTAINER_NAME} || true"
+                sh "docker rm ${CONTAINER_NAME} || true"
+
+                // Run the Docker container
+                sh "docker run -d -p 8080:80 --name ${CONTAINER_NAME} ${DOCKER_IMAGE}"
+            }
+        }
     }
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
