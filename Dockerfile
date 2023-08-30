@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /app
 
 # Copy the .NET project files to the container
-COPY *.csproj ./
+COPY ppojastores/trunk/PoojaStores/PoojaStores.csproj ./
 
 # Restore the project dependencies
 RUN dotnet restore
